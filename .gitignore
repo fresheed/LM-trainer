@@ -8,3 +8,8 @@ src/cmake_install.cmake
 src/CMakeLists.txt
 
 *~
+
+# eclipse stuff
+.settings/
+.project
+.cproject
