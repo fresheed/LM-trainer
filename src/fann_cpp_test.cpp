@@ -9,6 +9,8 @@
 #include <doublefann.h>
 #include <fann_cpp.h>
 #include <fann.h>
+#include "ann_wrappers/AnnWrapper.hpp"
+#include "ann_wrappers/FannAnnWrapper.hpp"
 
 
 using namespace std;
@@ -39,8 +41,10 @@ int main2(){
 
 
 int main(){
-  main2();
-  
+	//main2();
+	FannAnnWrapper *fw=new FannAnnWrapper();
+
+	delete fw;
 }
 
 

@@ -13,13 +13,15 @@ set (MAIN_SOURCES
 
 # непубличные пары исходников
 set (PRIVATE_CLASSES
-        
+        ann_wrappers/FannAnnWrapper
+ #       ann_wrappers/AnnWrapper
     )
 
 # файлы только заголовочные, у которых нет пары-исходника
 SET (HEADERS_ONLY
         types
         common
+        ann_wrappers/AnnWrapper
     )
 
 # публичные исходники

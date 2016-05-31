@@ -1,4 +1,10 @@
 bin/
 build/**
 !build/EMPTY
+
+src/CMakeFiles
+src/Makefile
+src/cmake_install.cmake
+src/CMakeLists.txt
+
 *~
