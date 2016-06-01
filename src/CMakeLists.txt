@@ -14,6 +14,15 @@ set (MAIN_SOURCES
 # непубличные пары исходников
 set (PRIVATE_CLASSES
         ann_wrappers/FannAnnWrapper
+#        ann_wrappers/CustomAnnWrapper
+
+	data_wrappers/FannDataWrapper
+	
+	testers/FannTester
+
+	trainer/LMTrainer
+
+	matrix_wrappers/EigenBackend
  #       ann_wrappers/AnnWrapper
     )
 
@@ -22,6 +31,9 @@ SET (HEADERS_ONLY
         types
         common
         ann_wrappers/AnnWrapper
+	matrix_wrappers/Mtx
+	data_wrappers/DataWrapper
+	matrix_wrappers/MatrixBackend
     )
 
 # публичные исходники
@@ -69,3 +81,11 @@ INSTALL (
     DESTINATION
     include/${PROJECT}
 )
+
+
+# eigen setup
+SET( EIGEN3_INCLUDE_DIR "eigen/cmake" )
+IF( NOT EIGEN3_INCLUDE_DIR )
+    MESSAGE( FATAL_ERROR "Please point the environment variable EIGEN3_INCLUDE_DIR to the include directory of your Eigen3 installation.")
+ENDIF()
+INCLUDE_DIRECTORIES ( "${EIGEN3_INCLUDE_DIR}" )

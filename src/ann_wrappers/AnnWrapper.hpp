@@ -10,7 +10,16 @@
 
 class AnnWrapper {
 public:
-	virtual double testDataSet() =0;
+	virtual int getInputsAmount() =0;
+	virtual int getOutputsAmount() =0;
+	virtual int getLayersAmount() =0;
+	virtual int getWeightAmount() =0;
+	virtual int getNeuronsInLayer(int layer) =0;
+
+	virtual double getWeightByIndex(int index) =0;
+	virtual double getWeightInLayer(int layer, int index) =0;
+
+
 	virtual ~AnnWrapper(){};
 protected:
 	AnnWrapper(){};

@@ -1,0 +1,26 @@
+/*
+ * Matrix.hpp
+ *
+ *  Created on: 31 мая 2016 г.
+ *      Author: fresheed
+ */
+
+#ifndef SRC_MATRIX_WRAPPERS_MTX_HPP_
+#define SRC_MATRIX_WRAPPERS_MTX_HPP_
+
+class Mtx {
+public:
+//	virtual double getElement(int row, int column) =0;
+//	virtual double setElement(int row, int column, double value) =0;
+//	virtual void matrixSum(Mtx &);
+//	virtual void matrixMult(Mtx &mult);
+//	virtual void scalarMult(double factor);
+protected:
+	Mtx(int rows, int columns){};
+	virtual void describe() =0;
+	virtual ~Mtx(){};
+};
+
+
+
+#endif /* SRC_MATRIX_WRAPPERS_MTX_HPP_ */
