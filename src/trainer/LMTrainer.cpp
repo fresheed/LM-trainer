@@ -60,6 +60,13 @@ void LMTrainer::trainEpoch(){
 	Mtx* jacobian_mtx=backend->getJacobianMatrix();
 	net->fillJacobianMatrix(train_data, jacobian_mtx);
 	cout << "Jacobian: " << endl;
+	jacobian_mtx->print();
+
+	Mtx* res=backend->computeDWForLambda(0.001);
+	cout << "received delta weights: "<<endl;
+	res->print();
+	//backend->computeDWForLambda(0.01);
+	//backend->computeDWForLambda(0.1);
 
 	adjustWeightsUntilSuccess();
 }

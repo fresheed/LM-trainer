@@ -3,6 +3,7 @@
 using namespace std;
 #include <iostream>
 #include <exception>
+#include <string.h>
 #include "../data_wrappers/FannDataWrapper.h"
 
 FannAnnWrapper::FannAnnWrapper(struct fann* net){
@@ -88,45 +89,44 @@ void FannAnnWrapper::fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix)
 
 
 void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix){
-//	if ( FannDataWrapper *fann_train_data = dynamic_cast< FannDataWrapper* >( train_data ) ) {
-//		cout << "Found FANN data"<< endl;
-//	}
-//	else {
-//		cout << "Some other train data"<< endl;
-//	}
+	check_errors_allocated();
 
-#define tmp_hide
-#ifndef tmp_hide
-		struct fann *test_ann=data->test_ann;
+	struct fann_neuron *neuron_it, *first_neuron=fann_net->first_layer->first_neuron, *prev_neurons;
+	struct fann_layer *current_layer, *first_layer=fann_net->first_layer, *after_last_layer=fann_net->last_layer;
+	fann_type *error_begin=fann_net->train_errors,
+			*last_layer_errors=error_begin+(((after_last_layer-1)->first_neuron)-first_neuron);
 
+	//add_to_weights(work_ann, fann_net, cur_dws);
 
-		struct fann_neuron *neuron_it, *first_neuron=test_ann->first_layer->first_neuron, *prev_neurons;
-		struct fann_layer *current_layer, *first_layer=test_ann->first_layer, *after_last_layer=test_ann->last_layer;
-		fann_type *error_begin=test_ann->train_errors,
-				*last_layer_errors=error_begin+(((after_last_layer-1)->first_neuron)-first_neuron);
+	int num_data=train_data->getExamplesAmount();
+	int num_out=getOutputsAmount();
+	for (int inp_iter = 0; inp_iter < num_data; inp_iter++) {
 
-		//add_to_weights(work_ann, test_ann, cur_dws);
+		// iterate by amount of outputs,
+		// setting non-zero only current output
+		for (int cur_out=0; cur_out<num_out; cur_out++){
+			fann_reset_MSE(fann_net);
+			memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
 
-		size_t inp_iter;
-		for (inp_iter = 0; inp_iter < train_data->num_data; inp_iter++) {
-			fann_reset_MSE(test_ann);
-			memset(test_ann->train_errors, 0, (test_ann->total_neurons) * sizeof(fann_type));
-
-			fann_run(test_ann, train_data->input[inp_iter]);
+			fann_run(fann_net, train_data->getInputByIndex(inp_iter));
 			//setup error for last layer
 			fann_type *error_it=last_layer_errors;
-			for(neuron_it = (after_last_layer-1)->first_neuron; neuron_it != (after_last_layer-1)->last_neuron; neuron_it++){
-				// do not iterate connections
-				if (neuron_it->last_con == neuron_it->first_con) continue; //skip bias neuron
-				*error_it=(-1)*fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
-						neuron_it->value, neuron_it->sum);
-				error_it++;
-			}
+
+//			for(neuron_it = (after_last_layer-1)->first_neuron; neuron_it != (after_last_layer-1)->last_neuron; neuron_it++){
+//				if (neuron_it->last_con == neuron_it->first_con) continue; //skip bias neuron
+//				if
+//				*error_it=(-1)*fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
+//						neuron_it->value, neuron_it->sum);
+//				error_it++;
+//			}
+
+			neuron_it=((after_last_layer-1)->first_neuron)+cur_out;
+
+			error_it[cur_out]=(-1)*fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
+											neuron_it->value, neuron_it->sum);
 
 			//backprop gradient
-			fann_backpropagate_MSE(test_ann);
-
-			int i;
+			fann_backpropagate_MSE(fann_net);
 
 			//extract weights deltas
 			const fann_type learning_rate=1.0;
@@ -137,16 +137,30 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 				for(neuron_it = current_layer->first_neuron; neuron_it != last_neuron; neuron_it++)	{
 					fann_type base_error = error_begin[neuron_it - first_neuron] * learning_rate;
 					int num_connections = neuron_it->last_con - neuron_it->first_con;
-					int i;
-					for(i = 0; i != num_connections; i++){
+					for(int i = 0; i != num_connections; i++){
 						fann_type dwi = base_error * prev_neurons[i].value;
-						gsl_matrix_float_set (J, inp_iter, neuron_it->first_con+i, dwi);
+						//gsl_matrix_float_set (J, inp_iter, neuron_it->first_con+i, dwi);
+						jacobian_matrix->set(inp_iter*num_out + cur_out, neuron_it->first_con+i, dwi);
 					}
 
 				}
 			}
 		}
-#endif
+
+	}
+}
+
+void FannAnnWrapper::check_errors_allocated(){
+	if(fann_net->train_errors == NULL){
+		fann_net->train_errors = (fann_type *) calloc(fann_net->total_neurons, sizeof(fann_type));
+		if(fann_net->train_errors == NULL){
+			fann_error((struct fann_error *) fann_net, FANN_E_CANT_ALLOCATE_MEM);
+			return;
+		}
+	}
+	else {
+		memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
+	}
 }
 
 double FannAnnWrapper::getErrorOnSet(DataWrapper* train_data){

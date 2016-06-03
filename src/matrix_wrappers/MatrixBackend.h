@@ -17,6 +17,7 @@ public:
 	MatrixBackend(AnnWrapper* ann, DataWrapper* data){};
 	virtual Mtx* getErrorMatrix() =0;
 	virtual Mtx* getJacobianMatrix() =0;
+	virtual Mtx* computeDWForLambda(double lambda) =0;
 	virtual ~MatrixBackend(){};
 };
 

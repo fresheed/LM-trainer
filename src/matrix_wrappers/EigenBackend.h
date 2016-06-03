@@ -19,6 +19,7 @@ public:
 	EigenBackend(AnnWrapper* ann, DataWrapper* data);
 	Mtx* getErrorMatrix();
 	Mtx* getJacobianMatrix();
+	Mtx* computeDWForLambda(double lambda);
 	~EigenBackend();
 private:
 	class EigenMatrix : public Mtx {
@@ -34,6 +35,7 @@ private:
 
 	EigenMatrix* error_matrix;
 	EigenMatrix* jacobian_matrix;
+	EigenMatrix* weights;
 };
 
 #endif /* SRC_MATRIX_WRAPPERS_EIGENBACKEND_H_ */

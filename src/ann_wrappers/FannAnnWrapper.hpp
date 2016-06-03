@@ -37,7 +37,7 @@ private:
 	struct fann* fann_net;
 	struct fann_connection* connections;
 	unsigned int *layer_sizes, *layer_first_neurons;
-
+	void check_errors_allocated();
 
 	bool connections_actual;
 	void updateConnections();
