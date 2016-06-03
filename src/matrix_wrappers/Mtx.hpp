@@ -15,6 +15,9 @@ public:
 //	virtual void matrixSum(Mtx &);
 //	virtual void matrixMult(Mtx &mult);
 //	virtual void scalarMult(double factor);
+	virtual void set(int row, int column, double value) =0;
+	virtual double get(int row, int column) =0;
+	virtual void print() =0;
 protected:
 	Mtx(int rows, int columns){};
 	virtual void describe() =0;

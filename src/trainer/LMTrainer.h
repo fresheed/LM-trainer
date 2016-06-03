@@ -13,13 +13,14 @@
 #include "../ann_wrappers/AnnWrapper.hpp"
 #include "../data_wrappers/DataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
+#include "../ann_wrappers/FannAnnWrapper.hpp"
 
 using namespace FANN;
 
 class LMTrainer {
 public:
 	LMTrainer();
-	void trainFann(neural_net* net, training_data* data);
+	void trainFann(FannHacker* net, training_data* data);
 	~LMTrainer();
 private:
 	void trainNetOnData();
@@ -28,17 +29,17 @@ private:
 	MatrixBackend* backend;
 
 	//train params
-	double lambda, lambda_max, lambda_min, mu;
+	double lambda, lambda_max, mu;
 	double max_train_epochs, cur_train_epoch;
 
 	void initTrainParams();
 	void initBackend();
 
-	bool isTrainTargetReached();
-	bool isForceStopNeeded();
-
 	void trainEpoch();
+	void adjustWeightsUntilSuccess();
+	void rollbackWeights(Mtx* delta_weights);
 
+	bool isTrainCompleted();
 	void log(const char* msg); // to preserve indentation
 };
 

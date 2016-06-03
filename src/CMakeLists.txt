@@ -41,7 +41,7 @@ set (PUBLIC_CLASSES)
 
 # используемые в программе библиотеки
 set (ADDITIONAL_LIBRARIES
-  fann
+  doublefann
     )
 
 set (PUBLIC_HEADERS)

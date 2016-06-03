@@ -6,6 +6,8 @@
  */
 
 #include "FannDataWrapper.h"
+#include <iostream>
+using namespace std;
 
 FannDataWrapper::FannDataWrapper(training_data *td) : DataWrapper() {
 	train_data=td;
@@ -16,6 +18,7 @@ int FannDataWrapper::getExamplesAmount(){
 }
 
 double* FannDataWrapper::getInputByIndex(int index){
+	//cout << "train:" << train_data->get_train_input(index)[0] << train_data->get_train_input(index)[1]<<endl;
 	return train_data->get_train_input(index);
 }
 

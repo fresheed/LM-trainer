@@ -25,6 +25,9 @@ private:
 		public:
 			EigenMatrix(int rows, int columns);
 			void describe();
+			void set(int row, int column, double value);
+			double get(int row, int column);
+			void print();
 			~EigenMatrix();
 			MatrixXd *mtx;
 	};

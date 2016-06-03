@@ -8,6 +8,9 @@
 #ifndef SRC_ANN_WRAPPERS_ANNWRAPPER_HPP_
 #define SRC_ANN_WRAPPERS_ANNWRAPPER_HPP_
 
+#include "../matrix_wrappers/Mtx.hpp"
+#include "../data_wrappers/DataWrapper.h"
+
 class AnnWrapper {
 public:
 	virtual int getInputsAmount() =0;
@@ -16,9 +19,15 @@ public:
 	virtual int getWeightAmount() =0;
 	virtual int getNeuronsInLayer(int layer) =0;
 
-	virtual double getWeightByIndex(int index) =0;
-	virtual double getWeightInLayer(int layer, int index) =0;
+//	virtual double getWeightByIndex(int index) =0;
+//	virtual double getWeightInLayer(int layer, int index) =0;
+//	//virtual void addToWeights(Mtx* delta_weights) =0;
+	virtual void printWeights(){};
 
+	virtual void fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix) =0;
+	virtual void fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix) =0;
+
+	virtual double getErrorOnSet(DataWrapper* train_data) =0;
 
 	virtual ~AnnWrapper(){};
 protected:

@@ -35,11 +35,24 @@ EigenBackend::~EigenBackend() {
 // Eigen matrix functions
 //
 EigenBackend::EigenMatrix::EigenMatrix(int rows, int columns) : Mtx(rows, columns){
+	//mtx=new MatrixXd(3, 3);
+	mtx=new MatrixXd(rows, columns);
+}
 
+void EigenBackend::EigenMatrix::set(int row, int column, double value){
+	(*mtx)(row, column)=value;
+}
+
+double EigenBackend::EigenMatrix::get(int row, int column){
+	return (*mtx)(row, column);
 }
 
 EigenBackend::EigenMatrix::~EigenMatrix(){
+	delete mtx;
+}
 
+void EigenBackend::EigenMatrix::print(){
+	cout << *mtx << endl;
 }
 
 void EigenBackend::EigenMatrix::describe(){

@@ -9,6 +9,7 @@
 #define SRC_TESTERS_FANNTESTER_H_
 
 using namespace FANN;
+#include "../ann_wrappers/FannAnnWrapper.hpp"
 
 class FannTester {
 public:
@@ -16,7 +17,7 @@ public:
 	//~FannTester();
 	void testWithFannNet();
 private:
-	FANN::neural_net* getInitializedFannNet();
+	FannHacker* getInitializedFannNet();
 	FANN::training_data* getFannData();
 
 };
