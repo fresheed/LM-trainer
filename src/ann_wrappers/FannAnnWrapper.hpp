@@ -24,9 +24,13 @@ public:
 
 	double getWeightByIndex(int index);
 	double getWeightInLayer(int layer, int index);
+	void addToWeights(Mtx* delta_weights);
+
 	virtual void printWeights();
 
 	double getErrorOnSet(DataWrapper* train_data);
+	double getClassificationPrecisionOnSet(DataWrapper* train_data);
+
 
 	void fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix);
 	void fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix);
@@ -38,6 +42,7 @@ private:
 	struct fann_connection* connections;
 	unsigned int *layer_sizes, *layer_first_neurons;
 	void check_errors_allocated();
+	int getClassFromVector(double* outs, int Nclasses);
 
 	bool connections_actual;
 	void updateConnections();

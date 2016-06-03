@@ -18,6 +18,7 @@ public:
 	int getExamplesAmount();
 	double* getInputByIndex(int index);
 	double* getDesiredOutputByIndex(int index);
+	struct fann_train_data* getInternalFannTrainData();
 	~FannDataWrapper();
 private:
 	struct fann_train_data* train_data;

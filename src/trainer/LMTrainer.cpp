@@ -12,10 +12,9 @@
 #include "../matrix_wrappers/EigenBackend.h"
 #include "../matrix_wrappers/Mtx.hpp"
 
-
 using namespace std;
 #include <iostream>
-#include <string.h>
+
 
 LMTrainer::LMTrainer() {
 
@@ -38,6 +37,7 @@ void LMTrainer::trainFann(struct fann* fann_net, struct fann_train_data* fann_da
 }
 
 void LMTrainer::trainNetOnData(){
+	cout<<"Initial accuracy: "<<net->getClassificationPrecisionOnSet(train_data)<<endl;
 	log("Training started");
 	initTrainParams();
 	initBackend();
@@ -45,54 +45,55 @@ void LMTrainer::trainNetOnData(){
 		trainEpoch();
 		cur_train_epoch++;
 	}
-	log("Training ended");
+	cout<<"Training finished"<<endl;
+	cout<<"Resulting accuracy: "<<net->getClassificationPrecisionOnSet(train_data)<<endl;
+
 	delete backend;
 }
 
 void LMTrainer::trainEpoch(){
-	log("    next epoch");
+	cout<<"    epoch "<<cur_train_epoch;
+
 
 	Mtx* error_mtx=backend->getErrorMatrix();
 	net->fillErrorMatrix(train_data, error_mtx);
-	cout << "Errors: " << endl;
-	error_mtx->print();
+	//cout << "Errors: " << endl;
+	//error_mtx->print();
 
 	Mtx* jacobian_mtx=backend->getJacobianMatrix();
 	net->fillJacobianMatrix(train_data, jacobian_mtx);
-	cout << "Jacobian: " << endl;
-	jacobian_mtx->print();
+	//cout << "Jacobian: " << endl;
+	//jacobian_mtx->print();
 
-	Mtx* res=backend->computeDWForLambda(0.001);
-	cout << "received delta weights: "<<endl;
-	res->print();
-	//backend->computeDWForLambda(0.01);
-	//backend->computeDWForLambda(0.1);
+	//cout << "original mse:" << backend->computeMseForErrors()<< endl;
+	//cout << "original mse:" << net->getErrorOnSet(train_data) << endl;
 
 	adjustWeightsUntilSuccess();
 }
 
 void LMTrainer::adjustWeightsUntilSuccess(){
-	log(" !!! weight adjustment not implemented yet !!!");
-
-//	double error_before_adjust=net->getErrorOnSet(train_data);
-//	double current_error=1e10; // just for first iteration
-//	while (!isTrainCompleted()){
-//		Mtx* delta_weights_to_test=backend->computeWeightsWithLambda(lambda);
-//		net->addToWeights(delta_weights_to_test);
-//		current_error=net->getErrorOnSet(train_data);
-//		if (current_error > error_before_adjust){
-//			lambda*=mu;
-//			rollbackWeights(delta_weights_to_test);
-//		} else {
-//			lambda/=mu;
-//			break;
-//		}
-//	}
+	double error_before_adjust=net->getErrorOnSet(train_data);
+	log("    current mse: ");
+	cout << "    " << error_before_adjust<<endl;
+	double current_error=1e10; // just for first iteration
+	while (!isTrainCompleted()){
+		Mtx* delta_weights_to_test=backend->computeDWForLambda(lambda);
+		net->addToWeights(delta_weights_to_test);
+		current_error=net->getErrorOnSet(train_data);
+		cout<< "      error with L="<<lambda<<" is "<<current_error<<endl;
+		if (current_error > error_before_adjust){
+			lambda*=mu;
+			rollbackWeights(delta_weights_to_test);
+		} else {
+			lambda/=mu;
+			break;
+		}
+	}
 }
 
 void LMTrainer::rollbackWeights(Mtx* delta_weights){
-//	backend->scaleMatrix(delta_weights, -1d);
-//	net->addToWeights(delta_weights);
+	delta_weights->scale(-1);
+	net->addToWeights(delta_weights);
 }
 
 
@@ -111,7 +112,7 @@ bool LMTrainer::isTrainCompleted(){
 
 void LMTrainer::initTrainParams(){
 	log("Initializating LM and train params...");
-	max_train_epochs=1;
+	max_train_epochs=25;
 	cur_train_epoch=0;
 	lambda=1e-3;
 	mu=10;

@@ -33,14 +33,23 @@ Mtx* EigenBackend::computeDWForLambda(double lambda){
 	MatrixXd eye=MatrixXd::Identity(jTj.rows(), jTj.cols());
 	MatrixXd left_part= (jTj + lambda*eye);
 
-	MatrixXd right_part= -1*jac_trans*(  *(error_matrix->mtx));
+	const double mult=1;
+	MatrixXd right_part= mult*jac_trans*(  *(error_matrix->mtx));
 
-	VectorXd ans = left_part.colPivHouseholderQr().solve(right_part);
+	//VectorXd ans = left_part.colPivHouseholderQr().solve(right_part);
+	VectorXd ans = left_part.fullPivLu().solve(right_part);
 	weights->mtx->topRows(ans.rows())=ans.head(ans.rows());
 
 	return weights;
 }
 
+double EigenBackend::computeMseForErrors(){
+	MatrixXd errors=(*(error_matrix->mtx));
+	MatrixXd sum_squares=errors.transpose() * errors; // actually 1x1
+	// to comply with octave
+	double factor=2.0;
+	return sum_squares(0,0)/(factor * errors.rows() );
+}
 
 EigenBackend::~EigenBackend() {
 	delete error_matrix;
@@ -62,6 +71,10 @@ void EigenBackend::EigenMatrix::set(int row, int column, double value){
 
 double EigenBackend::EigenMatrix::get(int row, int column){
 	return (*mtx)(row, column);
+}
+
+void EigenBackend::EigenMatrix::scale(double factor){
+	(*mtx)*=factor;
 }
 
 EigenBackend::EigenMatrix::~EigenMatrix(){

@@ -26,6 +26,10 @@ double* FannDataWrapper::getDesiredOutputByIndex(int index){
 	return fann_get_train_output(train_data, index);
 }
 
+struct fann_train_data* FannDataWrapper::getInternalFannTrainData(){
+	return train_data;
+}
+
 FannDataWrapper::~FannDataWrapper() {
 	// TODO Auto-generated destructor stub
 }

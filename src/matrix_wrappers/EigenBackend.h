@@ -20,6 +20,7 @@ public:
 	Mtx* getErrorMatrix();
 	Mtx* getJacobianMatrix();
 	Mtx* computeDWForLambda(double lambda);
+	double computeMseForErrors();
 	~EigenBackend();
 private:
 	class EigenMatrix : public Mtx {
@@ -28,6 +29,7 @@ private:
 			void describe();
 			void set(int row, int column, double value);
 			double get(int row, int column);
+			void scale(double factor);
 			void print();
 			~EigenMatrix();
 			MatrixXd *mtx;

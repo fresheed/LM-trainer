@@ -64,6 +64,16 @@ double FannAnnWrapper::getWeightInLayer(int layer, int index_in_layer){
 	return 1e10d;
 }
 
+void FannAnnWrapper::addToWeights(Mtx* delta_weights){
+	connections_actual=false;
+	updateConnections(); // should remove it
+	for (int i=0; i<getWeightAmount(); i++){
+		connections[i].weight+=delta_weights->get(i, 0);
+	}
+	fann_set_weight_array(fann_net, connections, getWeightAmount());
+	updateConnections(); // should remove it
+}
+
 void FannAnnWrapper::printWeights(){
 	cout << endl;
 	cout << "Weights: "<< endl;
@@ -157,14 +167,45 @@ void FannAnnWrapper::check_errors_allocated(){
 			fann_error((struct fann_error *) fann_net, FANN_E_CANT_ALLOCATE_MEM);
 			return;
 		}
-	}
-	else {
+	} else {
 		memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
 	}
 }
 
 double FannAnnWrapper::getErrorOnSet(DataWrapper* train_data){
-	return -1;
+	if (FannDataWrapper* fann_data_ptr=dynamic_cast<FannDataWrapper*>(train_data)){
+		return fann_test_data(fann_net, fann_data_ptr->getInternalFannTrainData());
+	} else {
+		cout << "Non-FANN data not supported in FannAnnWrapper!" << endl;
+		return -1e10;
+	}
+}
+
+double FannAnnWrapper::getClassificationPrecisionOnSet(DataWrapper* train_data){
+	int examples_total=train_data->getExamplesAmount();
+	int Nclasses=getOutputsAmount();
+	int examples_correct=0;
+	for (int i=0; i<examples_total; i++){
+		double* cur_input=train_data->getInputByIndex(i);
+		double* desired_out=train_data->getDesiredOutputByIndex(i);
+		double* net_out=fann_run(fann_net, cur_input);
+		examples_correct += (  getClassFromVector(desired_out, Nclasses)
+								== getClassFromVector(net_out, Nclasses) );
+	}
+	return examples_correct/examples_total;
+}
+
+
+int FannAnnWrapper::getClassFromVector(double* outs, int Nclasses){
+	double max=-1e10;
+	int max_ind=-1;
+	for (int i=0; i<Nclasses; i++){
+		if (outs[i]>max){
+			max_ind=i;
+			max=outs[i];
+		}
+	}
+	return max_ind;
 }
 
 FannAnnWrapper::~FannAnnWrapper(){
