@@ -21,7 +21,7 @@ LMTrainer::LMTrainer() {
 
 }
 
-void LMTrainer::trainFann(FannHacker* fann_net, training_data* fann_data){
+void LMTrainer::trainFann(struct fann* fann_net, struct fann_train_data* fann_data){
 	net=new FannAnnWrapper(fann_net);
 	train_data=new FannDataWrapper(fann_data);
 

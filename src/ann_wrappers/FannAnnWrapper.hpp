@@ -10,17 +10,11 @@
 #include "AnnWrapper.hpp"
 
 #include <doublefann.h>
-#include <fann_cpp.h>
-using namespace FANN;
 
-class FannHacker : public neural_net {
-public:
-	struct fann* getInternalAnnPointer(){ return this->ann; };
-};
 
 class FannAnnWrapper : public AnnWrapper {
 public:
-	FannAnnWrapper(FannHacker* net);
+	FannAnnWrapper(struct fann* net);
 
 	int getInputsAmount();
 	int getOutputsAmount();
@@ -40,8 +34,8 @@ public:
 	~FannAnnWrapper();
 
 private:
-	FannHacker* fann_net;
-	connection* connections;
+	struct fann* fann_net;
+	struct fann_connection* connections;
 	unsigned int *layer_sizes, *layer_first_neurons;
 
 

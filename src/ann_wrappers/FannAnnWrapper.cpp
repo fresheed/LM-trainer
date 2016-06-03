@@ -1,18 +1,16 @@
 #include "FannAnnWrapper.hpp"
 
-using namespace FANN;
-
 using namespace std;
 #include <iostream>
 #include <exception>
 #include "../data_wrappers/FannDataWrapper.h"
 
-FannAnnWrapper::FannAnnWrapper(FannHacker* net){
+FannAnnWrapper::FannAnnWrapper(struct fann* net){
 	fann_net=net;
-	connections=new connection[getWeightAmount()];
+	connections=new fann_connection[getWeightAmount()];
 	connections_actual=false;
 	layer_sizes=new unsigned int[getLayersAmount()];
-	fann_net->get_layer_array(layer_sizes);
+	fann_get_layer_array(fann_net, layer_sizes);
 
 	layer_first_neurons=new unsigned int[getLayersAmount()];
 	int cumsum=0;
@@ -23,15 +21,15 @@ FannAnnWrapper::FannAnnWrapper(FannHacker* net){
 }
 
 int FannAnnWrapper::getInputsAmount(){
-	return fann_net->get_num_input();
+	return fann_get_num_input(fann_net);
 }
 
 int FannAnnWrapper::getOutputsAmount(){
-	return fann_net->get_num_output();
+	return fann_get_num_output(fann_net);
 }
 
 int FannAnnWrapper::getLayersAmount(){
-	return fann_net->get_num_layers();
+	return fann_get_num_layers(fann_net);
 }
 
 int FannAnnWrapper::getNeuronsInLayer(int layer){
@@ -43,14 +41,13 @@ int FannAnnWrapper::getNeuronsInLayer(int layer){
 }
 
 int FannAnnWrapper::getWeightAmount(){
-	int num_conns=fann_net->get_total_connections();
-
+	int num_conns=fann_get_total_connections(fann_net);
 	return num_conns;
 }
 
 void FannAnnWrapper::updateConnections(){
 	if (!connections_actual){
-		fann_net->get_connection_array(connections);
+		fann_get_connection_array(fann_net, connections);
 		connections_actual=true;
 	}
 }
@@ -82,7 +79,7 @@ void FannAnnWrapper::fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix)
 	for (int ex_i=0; ex_i<num_data; ex_i++){
 		double* cur_input=train_data->getInputByIndex(ex_i);
 		double* desired_out=train_data->getDesiredOutputByIndex(ex_i);
-		double* net_out=fann_net->run(cur_input);
+		double* net_out=fann_run(fann_net, cur_input);
 		for (int cur_out=0; cur_out<outs; cur_out++){
 			error_matrix->set( outs*ex_i + cur_out, 0, net_out[cur_out]-desired_out[cur_out] );
 		}
@@ -97,7 +94,6 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 //	else {
 //		cout << "Some other train data"<< endl;
 //	}
-	struct ann* ann_ptr=fann_net->getInternalAnnPointer();
 
 #define tmp_hide
 #ifndef tmp_hide

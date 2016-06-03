@@ -9,20 +9,18 @@
 #define SRC_DATA_WRAPPERS_FANNDATAWRAPPER_H_
 
 #include <doublefann.h>
-#include <fann_cpp.h>
-using namespace FANN;
 
 #include "DataWrapper.h"
 
 class FannDataWrapper: public DataWrapper {
 public:
-	FannDataWrapper(training_data* td);
+	FannDataWrapper(struct fann_train_data* td);
 	int getExamplesAmount();
 	double* getInputByIndex(int index);
 	double* getDesiredOutputByIndex(int index);
 	~FannDataWrapper();
 private:
-	training_data* train_data;
+	struct fann_train_data* train_data;
 };
 
 #endif /* SRC_DATA_WRAPPERS_FANNDATAWRAPPER_H_ */

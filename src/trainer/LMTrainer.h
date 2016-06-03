@@ -9,18 +9,15 @@
 #define SRC_TRAINER_LMTRAINER_H_
 
 #include <doublefann.h>
-#include <fann_cpp.h>
 #include "../ann_wrappers/AnnWrapper.hpp"
 #include "../data_wrappers/DataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
 #include "../ann_wrappers/FannAnnWrapper.hpp"
 
-using namespace FANN;
-
 class LMTrainer {
 public:
 	LMTrainer();
-	void trainFann(FannHacker* net, training_data* data);
+	void trainFann(struct fann* net, struct fann_train_data* data);
 	~LMTrainer();
 private:
 	void trainNetOnData();

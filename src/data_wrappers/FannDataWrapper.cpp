@@ -9,21 +9,21 @@
 #include <iostream>
 using namespace std;
 
-FannDataWrapper::FannDataWrapper(training_data *td) : DataWrapper() {
+FannDataWrapper::FannDataWrapper(struct fann_train_data *td) : DataWrapper() {
 	train_data=td;
 }
 
 int FannDataWrapper::getExamplesAmount(){
-	return train_data->length_train_data();
+	return train_data->num_data;
 }
 
 double* FannDataWrapper::getInputByIndex(int index){
 	//cout << "train:" << train_data->get_train_input(index)[0] << train_data->get_train_input(index)[1]<<endl;
-	return train_data->get_train_input(index);
+	return fann_get_train_input(train_data, index);
 }
 
 double* FannDataWrapper::getDesiredOutputByIndex(int index){
-	return train_data->get_train_output(index);
+	return fann_get_train_output(train_data, index);
 }
 
 FannDataWrapper::~FannDataWrapper() {
