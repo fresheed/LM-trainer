@@ -184,15 +184,17 @@ double FannAnnWrapper::getErrorOnSet(DataWrapper* train_data){
 double FannAnnWrapper::getClassificationPrecisionOnSet(DataWrapper* train_data){
 	int examples_total=train_data->getExamplesAmount();
 	int Nclasses=getOutputsAmount();
+	cout << "Outputs: "<<Nclasses<<endl;
 	int examples_correct=0;
 	for (int i=0; i<examples_total; i++){
 		double* cur_input=train_data->getInputByIndex(i);
 		double* desired_out=train_data->getDesiredOutputByIndex(i);
 		double* net_out=fann_run(fann_net, cur_input);
-		examples_correct += (  getClassFromVector(desired_out, Nclasses)
-								== getClassFromVector(net_out, Nclasses) );
+		int desired_class= getClassFromVector(desired_out, Nclasses);
+		int net_class=getClassFromVector(net_out, Nclasses);
+		examples_correct += ( desired_class == net_class );
 	}
-	return examples_correct/examples_total;
+	return (double)examples_correct/examples_total;
 }
 
 

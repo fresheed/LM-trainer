@@ -15,6 +15,7 @@ if ( WITH_DEBUG_MODE )
 endif()
 
 if ( CMAKE_COMPILER_IS_GNUCXX )
+  # -pg is for profiler
     set(MY_CXX_FLAGS  "-Wall -std=c++11 -fmessage-length=0 -v -L/usr/local/lib -L/usr/lib")
     set(CMAKE_CXX_FLAGS "-O0 ${MY_CXX_FLAGS}")
     # я отключил настройку разных флагов для релиза и отладки. Пока что не нужно.

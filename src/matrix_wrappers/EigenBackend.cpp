@@ -12,9 +12,15 @@
 using namespace std;
 
 EigenBackend::EigenBackend(AnnWrapper* ann, DataWrapper *data) : MatrixBackend(ann, data) {
-	error_matrix=new EigenMatrix( ann->getOutputsAmount() * data->getExamplesAmount() , 1);
-	jacobian_matrix=new EigenMatrix(ann->getOutputsAmount() * data->getExamplesAmount(), ann->getWeightAmount());
-	weights=new EigenMatrix(ann->getWeightAmount(), 1);
+	int outputs=ann->getOutputsAmount(), examples=data->getExamplesAmount(), wgts=ann->getWeightAmount();
+
+	error_matrix=new EigenMatrix( outputs * examples, 1);
+	jacobian_matrix=new EigenMatrix(outputs * examples, wgts);
+	weights=new EigenMatrix(wgts, 1);
+
+	jT=new MatrixXd(wgts, outputs*examples);
+	jTj=new MatrixXd(wgts, wgts);
+	jT_by_err=new MatrixXd(wgts, 1);
 }
 
 Mtx* EigenBackend::getErrorMatrix(){
@@ -25,19 +31,33 @@ Mtx* EigenBackend::getJacobianMatrix(){
 	return jacobian_matrix;
 }
 
+void EigenBackend::initForEpoch(){
+	*jT = jacobian_matrix->mtx->transpose();
+	*jTj = (*jT) * (*(jacobian_matrix->mtx));
+	*jT_by_err = (*jT) * (*(error_matrix->mtx));
+//	*jT = *jTj = *jT_by_err = jacobian_matrix->mtx->transpose();
+//	*jTj *= (*(jacobian_matrix->mtx));
+//	*jT_by_err *= (*(error_matrix->mtx));
+}
 
 Mtx* EigenBackend::computeDWForLambda(double lambda){
-	// (JtJ + lI)dw=-Jt*err
-	MatrixXd jac_trans=jacobian_matrix->mtx->transpose();
-	MatrixXd jTj= jac_trans * (*(jacobian_matrix->mtx));
-	MatrixXd eye=MatrixXd::Identity(jTj.rows(), jTj.cols());
-	MatrixXd left_part= (jTj + lambda*eye);
+//	// (JtJ + lI)dw=Jt*err
+//	MatrixXd jac_trans=jacobian_matrix->mtx->transpose();
+//	MatrixXd jTj= jac_trans * (*(jacobian_matrix->mtx));
+//	MatrixXd eye=MatrixXd::Identity(jTj.rows(), jTj.cols());
+//	MatrixXd left_part= (jTj + lambda*eye);
+//
+//	const double mult=1;
+//	MatrixXd right_part= mult*jac_trans*(  *(error_matrix->mtx));
+//
+//	VectorXd ans = left_part.colPivHouseholderQr().solve(right_part);
+//	//VectorXd ans = left_part.fullPivLu().solve(right_part);
+//	weights->mtx->topRows(ans.rows())=ans.head(ans.rows());
+//
+//	return weights;
 
-	const double mult=1;
-	MatrixXd right_part= mult*jac_trans*(  *(error_matrix->mtx));
-
-	//VectorXd ans = left_part.colPivHouseholderQr().solve(right_part);
-	VectorXd ans = left_part.fullPivLu().solve(right_part);
+	MatrixXd left_part=(*jTj) + lambda*(MatrixXd::Identity(jTj->rows(), jTj->cols()));
+	VectorXd ans = left_part.colPivHouseholderQr().solve(*jT_by_err);
 	weights->mtx->topRows(ans.rows())=ans.head(ans.rows());
 
 	return weights;
@@ -54,6 +74,10 @@ double EigenBackend::computeMseForErrors(){
 EigenBackend::~EigenBackend() {
 	delete error_matrix;
 	delete jacobian_matrix;
+
+	delete jT;
+	delete jTj;
+	delete jT_by_err;
 }
 
 

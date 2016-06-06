@@ -67,7 +67,7 @@ void LMTrainer::trainEpoch(){
 
 	//cout << "original mse:" << backend->computeMseForErrors()<< endl;
 	//cout << "original mse:" << net->getErrorOnSet(train_data) << endl;
-
+	backend->initForEpoch();
 	adjustWeightsUntilSuccess();
 }
 
@@ -80,7 +80,7 @@ void LMTrainer::adjustWeightsUntilSuccess(){
 		Mtx* delta_weights_to_test=backend->computeDWForLambda(lambda);
 		net->addToWeights(delta_weights_to_test);
 		current_error=net->getErrorOnSet(train_data);
-		cout<< "      error with L="<<lambda<<" is "<<current_error<<endl;
+		//cout<< "      error with L="<<lambda<<" is "<<current_error<<endl;
 		if (current_error > error_before_adjust){
 			lambda*=mu;
 			rollbackWeights(delta_weights_to_test);
@@ -112,7 +112,7 @@ bool LMTrainer::isTrainCompleted(){
 
 void LMTrainer::initTrainParams(){
 	log("Initializating LM and train params...");
-	max_train_epochs=25;
+	max_train_epochs=10;
 	cur_train_epoch=0;
 	lambda=1e-3;
 	mu=10;

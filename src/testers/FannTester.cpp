@@ -9,8 +9,20 @@
 using namespace std;
 
 void FannTester::testWithFannNet(){
-	struct fann* net=getInitializedFannNet();
-	struct fann_train_data* data=getFannData();
+	//struct fann* net=getInitializedFannNet();
+	//struct fann_train_data* data=getFannData();
+
+//	struct fann* net=get4ClassesFannNet();
+//	struct fann_train_data* data=get4ClassesFannData();
+
+//	struct fann* net=get5ClassesFannNet();
+//	struct fann_train_data* data=get5ClassesFannData();
+
+//	struct fann* net=get3ClassesFannNet();
+//	struct fann_train_data* data=get3ClassesFannData();
+
+	struct fann* net=get7ClassesFannNet();
+	struct fann_train_data* data=get7ClassesFannData();
 
 	LMTrainer trainer;
 	trainer.trainFann(net, data);
@@ -57,5 +69,112 @@ struct fann* FannTester::getInitializedFannNet(){
 
 struct fann_train_data* FannTester::getFannData(){
 	struct fann_train_data* data=fann_read_train_from_file("train_data/xor.data");
+	return data;
+}
+
+struct fann* FannTester::get4ClassesFannNet(){
+	const int num_layers = 4;
+	const int num_input = 2;
+	const int num_hidden1 = 4;
+	const int num_hidden2 = 3;
+	const int num_output = 4;
+
+	struct fann *ann = fann_create_standard(num_layers, num_input,
+			num_hidden1, num_hidden2, num_output);
+
+	fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_steepness_hidden(ann, 1.0);
+	fann_set_activation_steepness_output(ann, 1.0);
+
+	// explain ?
+	fann_randomize_weights(ann, -0.5, 0.5);
+
+	return ann;
+}
+
+struct fann_train_data* FannTester::get4ClassesFannData(){
+	struct fann_train_data* data=fann_read_train_from_file("train_data/four_classes.set");
+	fann_shuffle_train_data(data);
+	return data;
+}
+//
+
+struct fann* FannTester::get5ClassesFannNet(){
+	const int num_layers = 4;
+	const int num_input = 5;
+	const int num_hidden1 = 7;
+	const int num_hidden2 = 5;
+	const int num_output = 5;
+
+	struct fann *ann = fann_create_standard(num_layers, num_input,
+			num_hidden1, num_hidden2, num_output);
+
+	fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_steepness_hidden(ann, 1.0);
+	fann_set_activation_steepness_output(ann, 1.0);
+
+	// explain ?
+	fann_randomize_weights(ann, -0.5, 0.5);
+
+	return ann;
+}
+
+struct fann_train_data* FannTester::get5ClassesFannData(){
+	struct fann_train_data* data=fann_read_train_from_file("train_data/5f_5c_5175e.set");
+	//struct fann_train_data* data=fann_read_train_from_file("train_data/5f_5c_5175e_1000.set");
+	return data;
+}
+
+struct fann* FannTester::get3ClassesFannNet(){
+	const int num_layers = 4;
+	const int num_input = 24;
+	const int num_hidden1 = 7;
+	const int num_hidden2 = 5;
+	const int num_output = 3;
+
+	struct fann *ann = fann_create_standard(num_layers, num_input,
+			num_hidden1, num_hidden2, num_output);
+
+	fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_steepness_hidden(ann, 1.0);
+	fann_set_activation_steepness_output(ann, 1.0);
+
+	// explain ?
+	fann_randomize_weights(ann, -0.5, 0.5);
+
+	return ann;
+}
+
+struct fann_train_data* FannTester::get3ClassesFannData(){
+	struct fann_train_data* data=fann_read_train_from_file("train_data/24f_3c_487e.set");
+	return data;
+}
+
+struct fann* FannTester::get7ClassesFannNet(){
+	const int num_layers = 4;
+	const int num_input = 33;
+	const int num_hidden1 = 7;
+	const int num_hidden2 = 5;
+	const int num_output = 7;
+
+	struct fann *ann = fann_create_standard(num_layers, num_input,
+			num_hidden1, num_hidden2, num_output);
+
+	fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
+	fann_set_activation_steepness_hidden(ann, 1.0);
+	fann_set_activation_steepness_output(ann, 1.0);
+
+	// explain ?
+	fann_randomize_weights(ann, -0.5, 0.5);
+
+	return ann;
+}
+
+struct fann_train_data* FannTester::get7ClassesFannData(){
+	struct fann_train_data* data=fann_read_train_from_file("train_data/33f_7c_6684e.set");
 	return data;
 }

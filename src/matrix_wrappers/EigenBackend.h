@@ -20,6 +20,7 @@ public:
 	Mtx* getErrorMatrix();
 	Mtx* getJacobianMatrix();
 	Mtx* computeDWForLambda(double lambda);
+	void initForEpoch();
 	double computeMseForErrors();
 	~EigenBackend();
 private:
@@ -38,6 +39,10 @@ private:
 	EigenMatrix* error_matrix;
 	EigenMatrix* jacobian_matrix;
 	EigenMatrix* weights;
+
+	MatrixXd* jT;
+	MatrixXd* jTj;
+	MatrixXd* jT_by_err;
 };
 
 #endif /* SRC_MATRIX_WRAPPERS_EIGENBACKEND_H_ */
