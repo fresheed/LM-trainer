@@ -8,7 +8,7 @@
 #ifndef SRC_TESTERS_FANNTESTER_H_
 #define SRC_TESTERS_FANNTESTER_H_
 
-#include "../ann_wrappers/FannAnnWrapper.hpp"
+#include "../ann_wrappers/FannAnnWrapper.h"
 
 class FannTester {
 public:

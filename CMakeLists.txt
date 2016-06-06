@@ -1,40 +1,32 @@
-# комментарии начинаются с решётки
 cmake_minimum_required (VERSION 2.6) 
+ 
+set (PROJECT LMTrainer) 
+set (PROJECT_DIR ${CMAKE_CURRENT_LIST_DIR})
+message ("CURRENT DIR: ${PROJECT_DIR}")
+project (${PROJECT}) 
+ 
+#set (HEADERS fdls.h)
+ 
+#set (SOURCES csdfs.cpp) 
 
-cmake_policy(SET CMP0011 NEW)
-cmake_policy(SET CMP0003 OLD)
+file (GLOB_RECURSE all_headers "src/*.h")
+message("My headers: " ${all_headers})
+file (GLOB_RECURSE all_sources "src/*.cpp")
+message("My sources: " ${all_sources})
 
-OPTION(WITH_DEBUG_MODE "Build with debug mode" ON)
+# FANN processing
+include_directories (lib/fann/headers)
+#add_subdirectory (lib/fann/compiled/ bin/doublefann)
+find_library (lib/fann/compiled/libdoublefann.so.2.2.0 doublefann)
 
-if ( NOT UNIX )
-    message (FATAL_ERROR "Win version is not ready yet!")
-endif ()
+# Eigen processing
+include_directories (lib/eigen/Eigen)
 
-message ("Starting cmake")
+set (EXECUTABLE_OUTPUT_PATH "${PROJECT_DIR}/bin")
 
-# я вынес настройки путей, флаги компиляции в отдельный фаил, чтобы не громоздить здесь лишнего
-include (lm-trainer.cmake)
+set(MY_CXX_FLAGS  "-Wall -std=c++11 -fmessage-length=0 -v")
 
-# создаём новый проект
-set (PROJECT lm-trainer)
+add_executable (${PROJECT} ${all_headers} ${all_sources})
 
-# в текущем проекте ничего не нужно дополнительно компилировать
-set (LIBRARIES)
-# следующий код нужен для компиляции и подключения сторонних библиотек 
-    foreach (LIBRARY ${LIBRARIES})
-        find_library("${LIBRARY}_FOUND" ${LIBRARY})
-        message(STATUS "Check the ${LIBRARY} is installed: " ${${LIBRARY}_FOUND})
-        if ( "${${LIBRARY}_FOUND}" STREQUAL "${LIBRARY}_FOUND-NOTFOUND" )
-            message(STATUS "Adding library sources")
-            add_subdirectory (../${LIBRARY} lib/${LIBRARY})
-        endif ()
-    endforeach ()
 
-# никаких дополнительных целей нет
-set (TARGETS "")
-
-set (HEADERS "")
-
-message ( STATUS "SOURCES: ${SOURCES}")
-
-add_subdirectory (src)
+target_link_libraries (${PROJECT} LINK_PUBLIC doublefann)

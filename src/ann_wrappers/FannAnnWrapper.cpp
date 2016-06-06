@@ -1,4 +1,4 @@
-#include "FannAnnWrapper.hpp"
+#include "FannAnnWrapper.h"
 
 using namespace std;
 #include <iostream>
@@ -116,7 +116,9 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 		// setting non-zero only current output
 		for (int cur_out=0; cur_out<num_out; cur_out++){
 			fann_reset_MSE(fann_net);
+
 			memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
+
 
 			fann_run(fann_net, train_data->getInputByIndex(inp_iter));
 			//setup error for last layer
@@ -132,8 +134,12 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 
 			neuron_it=((after_last_layer-1)->first_neuron)+cur_out;
 
+			cout << neuron_it->activation_function <<" "<<neuron_it->activation_steepness << " "<<neuron_it->value << " "<< neuron_it->sum<<endl;
+			cout << error_it <<endl;
+			cout << cur_out <<endl;
 			error_it[cur_out]=(-1)*fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
 											neuron_it->value, neuron_it->sum);
+			cout << "after problem"<<endl;
 
 			//backprop gradient
 			fann_backpropagate_MSE(fann_net);

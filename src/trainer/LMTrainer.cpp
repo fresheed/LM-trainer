@@ -6,7 +6,7 @@
  */
 
 #include "LMTrainer.h"
-#include "../ann_wrappers/FannAnnWrapper.hpp"
+#include "../ann_wrappers/FannAnnWrapper.h"
 #include "../data_wrappers/FannDataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
 #include "../matrix_wrappers/EigenBackend.h"
@@ -52,7 +52,7 @@ void LMTrainer::trainNetOnData(){
 }
 
 void LMTrainer::trainEpoch(){
-	cout<<"    epoch "<<cur_train_epoch;
+	cout<<"    epoch "<<cur_train_epoch<<endl;
 
 
 	Mtx* error_mtx=backend->getErrorMatrix();

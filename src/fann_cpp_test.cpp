@@ -2,8 +2,7 @@
 
 #include <iostream>
 #include "ann_wrappers/CustomAnnWrapper.h"
-#include "ann_wrappers/FannAnnWrapper.hpp"
-
+#include "ann_wrappers/FannAnnWrapper.h"
 #include "testers/FannTester.h"
 
 using namespace std;

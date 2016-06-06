@@ -5,8 +5,8 @@
  *      Author: fresheed
  */
 
-#ifndef SRC_ANN_WRAPPERS_FANNANNWRAPPER_HPP_
-#define SRC_ANN_WRAPPERS_FANNANNWRAPPER_HPP_
+#ifndef SRC_ANN_WRAPPERS_FANNANNWRAPPER_H_
+#define SRC_ANN_WRAPPERS_FANNANNWRAPPER_H_
 #include "AnnWrapper.hpp"
 
 #include <doublefann.h>
@@ -52,4 +52,4 @@ private:
 
 
 
-#endif /* SRC_ANN_WRAPPERS_FANNANNWRAPPER_HPP_ */
+#endif /* SRC_ANN_WRAPPERS_FANNANNWRAPPER_H_ */

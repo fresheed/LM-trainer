@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include <doublefann.h>
-
 #include "FannTester.h"
 #include "../trainer/LMTrainer.h"
 #include <iostream>
@@ -18,11 +17,11 @@ void FannTester::testWithFannNet(){
 //	struct fann* net=get5ClassesFannNet();
 //	struct fann_train_data* data=get5ClassesFannData();
 
-//	struct fann* net=get3ClassesFannNet();
-//	struct fann_train_data* data=get3ClassesFannData();
+	struct fann* net=get3ClassesFannNet();
+	struct fann_train_data* data=get3ClassesFannData();
 
-	struct fann* net=get7ClassesFannNet();
-	struct fann_train_data* data=get7ClassesFannData();
+	// struct fann* net=get7ClassesFannNet();
+	// struct fann_train_data* data=get7ClassesFannData();
 
 	LMTrainer trainer;
 	trainer.trainFann(net, data);

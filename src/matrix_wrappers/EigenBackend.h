@@ -9,7 +9,8 @@
 #define SRC_MATRIX_WRAPPERS_EIGENBACKEND_H_
 
 #include "MatrixBackend.h"
-#include "../eigen/Eigen/Dense"
+//#include "../eigen/Eigen/Dense"
+#include <Dense>
 #include "Mtx.hpp"
 using namespace Eigen;
 

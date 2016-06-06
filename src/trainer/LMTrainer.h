@@ -12,7 +12,7 @@
 #include "../ann_wrappers/AnnWrapper.hpp"
 #include "../data_wrappers/DataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
-#include "../ann_wrappers/FannAnnWrapper.hpp"
+#include "../ann_wrappers/FannAnnWrapper.h"
 
 class LMTrainer {
 public:
