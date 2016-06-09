@@ -4,12 +4,14 @@
 #include "FannTester.h"
 #include "../trainer/LMTrainer.h"
 #include <iostream>
+#include <typeinfo>
 
 using namespace std;
 
 void FannTester::testWithFannNet(){
-	//struct fann* net=getInitializedFannNet();
-	//struct fann_train_data* data=getFannData();
+
+//	struct fann* net=getInitializedFannNet();
+//	struct fann_train_data* data=getFannData();
 
 //	struct fann* net=get4ClassesFannNet();
 //	struct fann_train_data* data=get4ClassesFannData();
@@ -22,6 +24,7 @@ void FannTester::testWithFannNet(){
 
 	// struct fann* net=get7ClassesFannNet();
 	// struct fann_train_data* data=get7ClassesFannData();
+
 
 	LMTrainer trainer;
 	trainer.trainFann(net, data);
@@ -40,10 +43,13 @@ struct fann* FannTester::getInitializedFannNet(){
 	struct fann *ann = fann_create_standard(num_layers, num_input,
 			num_hidden, num_output);
 
+
 	fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
 	fann_set_activation_function_output(ann, FANN_SIGMOID_SYMMETRIC);
 	fann_set_activation_steepness_hidden(ann, 1.0);
 	fann_set_activation_steepness_output(ann, 1.0);
+
+
 
 	const int Nweights=12;
 	double weights_values[Nweights]={-0.585146d,  -0.845445d,  -0.496637d,  0.218401d,  -0.014935d,  -0.510967d,

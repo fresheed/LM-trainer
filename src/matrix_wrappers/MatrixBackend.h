@@ -8,8 +8,8 @@
 #ifndef SRC_MATRIX_WRAPPERS_MATRIXBACKEND_H_
 #define SRC_MATRIX_WRAPPERS_MATRIXBACKEND_H_
 
-#include "Mtx.hpp"
-#include "../ann_wrappers/AnnWrapper.hpp"
+#include "Mtx.h"
+#include "../ann_wrappers/AnnWrapper.h"
 #include "../data_wrappers/DataWrapper.h"
 
 class MatrixBackend {

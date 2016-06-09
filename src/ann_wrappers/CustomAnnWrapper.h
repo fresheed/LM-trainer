@@ -8,7 +8,7 @@
 #ifndef SRC_ANN_WRAPPERS_CUSTOMANNWRAPPER_H_
 #define SRC_ANN_WRAPPERS_CUSTOMANNWRAPPER_H_
 
-#include "AnnWrapper.hpp"
+#include "AnnWrapper.h"
 
 class CustomAnnWrapper: public AnnWrapper {
 public:

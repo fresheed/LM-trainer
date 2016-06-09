@@ -10,7 +10,7 @@
 #include "../data_wrappers/FannDataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
 #include "../matrix_wrappers/EigenBackend.h"
-#include "../matrix_wrappers/Mtx.hpp"
+#include "../matrix_wrappers/Mtx.h"
 
 using namespace std;
 #include <iostream>
@@ -112,7 +112,7 @@ bool LMTrainer::isTrainCompleted(){
 
 void LMTrainer::initTrainParams(){
 	log("Initializating LM and train params...");
-	max_train_epochs=10;
+	max_train_epochs=30;
 	cur_train_epoch=0;
 	lambda=1e-3;
 	mu=10;

@@ -1,14 +1,14 @@
 /*
- * AnnWrapper.hpp
+ * AnnWrapper.h
  *
  *  Created on: 30 мая 2016 г.
  *      Author: fresheed
  */
 
-#ifndef SRC_ANN_WRAPPERS_ANNWRAPPER_HPP_
-#define SRC_ANN_WRAPPERS_ANNWRAPPER_HPP_
+#ifndef SRC_ANN_WRAPPERS_ANNWRAPPER_H_
+#define SRC_ANN_WRAPPERS_ANNWRAPPER_H_
 
-#include "../matrix_wrappers/Mtx.hpp"
+#include "../matrix_wrappers/Mtx.h"
 #include "../data_wrappers/DataWrapper.h"
 
 class AnnWrapper {
@@ -38,4 +38,4 @@ protected:
 
 
 
-#endif /* SRC_ANN_WRAPPERS_ANNWRAPPER_HPP_ */
+#endif /* SRC_ANN_WRAPPERS_ANNWRAPPER_H_ */

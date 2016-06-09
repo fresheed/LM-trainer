@@ -11,7 +11,7 @@
 #include "MatrixBackend.h"
 //#include "../eigen/Eigen/Dense"
 #include <Dense>
-#include "Mtx.hpp"
+#include "Mtx.h"
 using namespace Eigen;
 
 

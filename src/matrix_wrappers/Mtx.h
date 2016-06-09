@@ -1,12 +1,12 @@
 /*
- * Matrix.hpp
+ * Matrix.h
  *
  *  Created on: 31 мая 2016 г.
  *      Author: fresheed
  */
 
-#ifndef SRC_MATRIX_WRAPPERS_MTX_HPP_
-#define SRC_MATRIX_WRAPPERS_MTX_HPP_
+#ifndef SRC_MATRIX_WRAPPERS_MTX_H_
+#define SRC_MATRIX_WRAPPERS_MTX_H_
 
 class Mtx {
 public:
@@ -27,4 +27,4 @@ protected:
 
 
 
-#endif /* SRC_MATRIX_WRAPPERS_MTX_HPP_ */
+#endif /* SRC_MATRIX_WRAPPERS_MTX_H_ */

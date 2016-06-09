@@ -1,5 +1,5 @@
 /*
- * FannAnnWrapper.hpp
+ * FannAnnWrapper.h
  *
  *  Created on: 30 мая 2016 г.
  *      Author: fresheed
@@ -7,7 +7,7 @@
 
 #ifndef SRC_ANN_WRAPPERS_FANNANNWRAPPER_H_
 #define SRC_ANN_WRAPPERS_FANNANNWRAPPER_H_
-#include "AnnWrapper.hpp"
+#include "AnnWrapper.h"
 
 #include <doublefann.h>
 
@@ -36,6 +36,8 @@ public:
 	void fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix);
 
 	~FannAnnWrapper();
+
+	void explore_ann(struct fann *net);
 
 private:
 	struct fann* fann_net;

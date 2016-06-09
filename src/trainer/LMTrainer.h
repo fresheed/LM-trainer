@@ -9,7 +9,7 @@
 #define SRC_TRAINER_LMTRAINER_H_
 
 #include <doublefann.h>
-#include "../ann_wrappers/AnnWrapper.hpp"
+#include "../ann_wrappers/AnnWrapper.h"
 #include "../data_wrappers/DataWrapper.h"
 #include "../matrix_wrappers/MatrixBackend.h"
 #include "../ann_wrappers/FannAnnWrapper.h"

@@ -5,6 +5,7 @@ using namespace std;
 #include <exception>
 #include <string.h>
 #include "../data_wrappers/FannDataWrapper.h"
+#include <typeinfo>
 
 FannAnnWrapper::FannAnnWrapper(struct fann* net){
 	fann_net=net;
@@ -97,9 +98,34 @@ void FannAnnWrapper::fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix)
 	}
 }
 
+void FannAnnWrapper::explore_ann(struct fann * fann_net){
+	struct fann_layer* first_layer=fann_net->first_layer;
+	cout << fann_net->connection_rate<<endl;
+	cout << "af: "<<(fann_net->first_layer +1)->first_neuron ->activation_function << endl;
+	double test_inp[2]={4.5, -4.5};
+	fann_run(fann_net, test_inp);
+	for (unsigned int l=0; l<fann_get_num_layers(fann_net); l++){
+		cout << "layer "<<l<<endl;
+		struct fann_neuron* first_neuron_in_layer=(first_layer+l)->first_neuron;
+		struct fann_neuron* neuron_it;
+		for (int n=0; n<getNeuronsInLayer(l); n++){
+			cout <<"  neuron "<<n<<endl;
+			neuron_it=first_neuron_in_layer+n;
+			cout <<"    "<<neuron_it<<endl;
+			cout <<"    "<<neuron_it->activation_function<<endl;
+			cout <<"    "<<neuron_it->sum<<endl;
+			cout <<"    "<<neuron_it->value<<endl;
+			cout <<" df "<<fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
+							neuron_it->value, neuron_it->sum) <<endl;
+		}
+	}
+
+}
+
 
 void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix){
 	check_errors_allocated();
+	//explore_ann(fann_net);
 
 	struct fann_neuron *neuron_it, *first_neuron=fann_net->first_layer->first_neuron, *prev_neurons;
 	struct fann_layer *current_layer, *first_layer=fann_net->first_layer, *after_last_layer=fann_net->last_layer;
@@ -116,9 +142,7 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 		// setting non-zero only current output
 		for (int cur_out=0; cur_out<num_out; cur_out++){
 			fann_reset_MSE(fann_net);
-
 			memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
-
 
 			fann_run(fann_net, train_data->getInputByIndex(inp_iter));
 			//setup error for last layer
@@ -134,12 +158,8 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 
 			neuron_it=((after_last_layer-1)->first_neuron)+cur_out;
 
-			cout << neuron_it->activation_function <<" "<<neuron_it->activation_steepness << " "<<neuron_it->value << " "<< neuron_it->sum<<endl;
-			cout << error_it <<endl;
-			cout << cur_out <<endl;
 			error_it[cur_out]=(-1)*fann_activation_derived(neuron_it->activation_function, neuron_it->activation_steepness,
 											neuron_it->value, neuron_it->sum);
-			cout << "after problem"<<endl;
 
 			//backprop gradient
 			fann_backpropagate_MSE(fann_net);
@@ -169,11 +189,14 @@ void FannAnnWrapper::fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_m
 void FannAnnWrapper::check_errors_allocated(){
 	if(fann_net->train_errors == NULL){
 		fann_net->train_errors = (fann_type *) calloc(fann_net->total_neurons, sizeof(fann_type));
+		//fann_net->train_errors = new fann_type[fann_net->total_neurons];
+		cout << "errors allocated" <<endl;
 		if(fann_net->train_errors == NULL){
 			fann_error((struct fann_error *) fann_net, FANN_E_CANT_ALLOCATE_MEM);
 			return;
 		}
 	} else {
+		cout << "errors are ready" << endl;
 		memset(fann_net->train_errors, 0, (fann_net->total_neurons) * sizeof(fann_type));
 	}
 }
@@ -217,8 +240,9 @@ int FannAnnWrapper::getClassFromVector(double* outs, int Nclasses){
 }
 
 FannAnnWrapper::~FannAnnWrapper(){
+	//delete[] fann_net->train_errors;
 	// coed
-	delete connections;
-	delete layer_sizes;
-	delete layer_first_neurons;
+	delete[] connections;
+	delete[] layer_sizes;
+	delete[] layer_first_neurons;
 }

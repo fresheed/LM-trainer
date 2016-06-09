@@ -74,6 +74,7 @@ double EigenBackend::computeMseForErrors(){
 EigenBackend::~EigenBackend() {
 	delete error_matrix;
 	delete jacobian_matrix;
+	delete weights;
 
 	delete jT;
 	delete jTj;
