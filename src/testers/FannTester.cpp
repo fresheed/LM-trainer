@@ -103,7 +103,6 @@ struct fann_train_data* FannTester::get4ClassesFannData(){
 	fann_shuffle_train_data(data);
 	return data;
 }
-//
 
 struct fann* FannTester::get5ClassesFannNet(){
 	const int num_layers = 4;

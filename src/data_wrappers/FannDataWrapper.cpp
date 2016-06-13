@@ -18,13 +18,10 @@ int FannDataWrapper::getExamplesAmount(){
 }
 
 double* FannDataWrapper::getInputByIndex(int index){
-	//cout << "train:" << train_data->get_train_input(index)[0] << train_data->get_train_input(index)[1]<<endl;
-	//return fann_get_train_input(train_data, index);
 	return train_data->input[index];
 }
 
 double* FannDataWrapper::getDesiredOutputByIndex(int index){
-	//return fann_get_train_output(train_data, index);
 	return train_data->output[index];
 }
 
@@ -33,6 +30,5 @@ struct fann_train_data* FannDataWrapper::getInternalFannTrainData(){
 }
 
 FannDataWrapper::~FannDataWrapper() {
-	// TODO Auto-generated destructor stub
 }
 

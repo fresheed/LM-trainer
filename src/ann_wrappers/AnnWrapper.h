@@ -19,10 +19,7 @@ public:
 	virtual int getWeightAmount() =0;
 	virtual int getNeuronsInLayer(int layer) =0;
 
-//	virtual double getWeightByIndex(int index) =0;
-//	virtual double getWeightInLayer(int layer, int index) =0;
 	virtual void addToWeights(Mtx* delta_weights) =0;
-	virtual void printWeights(){};
 
 	virtual void fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix) =0;
 	virtual void fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix) =0;

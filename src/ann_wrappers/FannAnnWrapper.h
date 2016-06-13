@@ -22,15 +22,10 @@ public:
 	int getWeightAmount();
 	int getNeuronsInLayer(int layer);
 
-	double getWeightByIndex(int index);
-	double getWeightInLayer(int layer, int index);
 	void addToWeights(Mtx* delta_weights);
-
-	virtual void printWeights();
 
 	double getErrorOnSet(DataWrapper* train_data);
 	double getClassificationPrecisionOnSet(DataWrapper* train_data);
-
 
 	void fillErrorMatrix(DataWrapper* train_data, Mtx* error_matrix);
 	void fillJacobianMatrix(DataWrapper* train_data, Mtx* jacobian_matrix);

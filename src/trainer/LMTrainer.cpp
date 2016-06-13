@@ -24,13 +24,7 @@ void LMTrainer::trainFann(struct fann* fann_net, struct fann_train_data* fann_da
 	net=new FannAnnWrapper(fann_net);
 	train_data=new FannDataWrapper(fann_data);
 
-	// remove
-	cout << "weights: "<<net->getWeightAmount()<<endl;
-	cout << net->getNeuronsInLayer(0)<<" "<<net->getNeuronsInLayer(1)<<" "<<net->getNeuronsInLayer(2)<<endl;
-	// remove
-
 	trainNetOnData();
-
 
 	delete net;
 	delete train_data;
@@ -38,7 +32,7 @@ void LMTrainer::trainFann(struct fann* fann_net, struct fann_train_data* fann_da
 
 void LMTrainer::trainNetOnData(){
 	cout<<"Initial accuracy: "<<net->getClassificationPrecisionOnSet(train_data)<<endl;
-	log("Training started");
+	cout<<("Training started")<<endl;
 	initTrainParams();
 	initBackend();
 	while (! (isTrainCompleted()) ) {
@@ -62,25 +56,20 @@ void LMTrainer::trainEpoch(){
 
 	Mtx* jacobian_mtx=backend->getJacobianMatrix();
 	net->fillJacobianMatrix(train_data, jacobian_mtx);
-	//cout << "Jacobian: " << endl;
-	//jacobian_mtx->print();
 
-	//cout << "original mse:" << backend->computeMseForErrors()<< endl;
-	//cout << "original mse:" << net->getErrorOnSet(train_data) << endl;
 	backend->initForEpoch();
 	adjustWeightsUntilSuccess();
 }
 
 void LMTrainer::adjustWeightsUntilSuccess(){
 	double error_before_adjust=net->getErrorOnSet(train_data);
-	log("    current mse: ");
+	cout<<("    current mse: ");
 	cout << "    " << error_before_adjust<<endl;
 	double current_error=1e10; // just for first iteration
 	while (!isTrainCompleted()){
 		Mtx* delta_weights_to_test=backend->computeDWForLambda(lambda);
 		net->addToWeights(delta_weights_to_test);
 		current_error=net->getErrorOnSet(train_data);
-		//cout<< "      error with L="<<lambda<<" is "<<current_error<<endl;
 		if (current_error > error_before_adjust){
 			lambda*=mu;
 			rollbackWeights(delta_weights_to_test);
@@ -99,11 +88,11 @@ void LMTrainer::rollbackWeights(Mtx* delta_weights){
 
 bool LMTrainer::isTrainCompleted(){
 	if (cur_train_epoch>=max_train_epochs) {
-		log("    stopping because max epochs reached");
+		cout<<("    stopping because max epochs reached")<<endl;
 		return true;
 	}
 	if (lambda >= lambda_max) {
-		log("    stopping because lambda increased too much");
+		cout<<("    stopping because lambda increased too much")<<endl;
 		return true;
 	}
 	return false;
@@ -111,7 +100,7 @@ bool LMTrainer::isTrainCompleted(){
 
 
 void LMTrainer::initTrainParams(){
-	log("Initializating LM and train params...");
+	cout<<("Initializating LM and train params...")<<endl;
 	max_train_epochs=30;
 	cur_train_epoch=0;
 	lambda=1e-3;
@@ -124,10 +113,6 @@ void LMTrainer::initBackend(){
 }
 
 
-
-void LMTrainer::log(const char* msg){
-	cout << "  "<< msg << endl;
-}
 
 LMTrainer::~LMTrainer() {
 

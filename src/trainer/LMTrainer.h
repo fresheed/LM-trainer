@@ -37,7 +37,6 @@ private:
 	void rollbackWeights(Mtx* delta_weights);
 
 	bool isTrainCompleted();
-	void log(const char* msg); // to preserve indentation
 };
 
 #endif /* SRC_TRAINER_LMTRAINER_H_ */

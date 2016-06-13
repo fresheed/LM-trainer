@@ -35,27 +35,9 @@ void EigenBackend::initForEpoch(){
 	*jT = jacobian_matrix->mtx->transpose();
 	*jTj = (*jT) * (*(jacobian_matrix->mtx));
 	*jT_by_err = (*jT) * (*(error_matrix->mtx));
-//	*jT = *jTj = *jT_by_err = jacobian_matrix->mtx->transpose();
-//	*jTj *= (*(jacobian_matrix->mtx));
-//	*jT_by_err *= (*(error_matrix->mtx));
 }
 
 Mtx* EigenBackend::computeDWForLambda(double lambda){
-//	// (JtJ + lI)dw=Jt*err
-//	MatrixXd jac_trans=jacobian_matrix->mtx->transpose();
-//	MatrixXd jTj= jac_trans * (*(jacobian_matrix->mtx));
-//	MatrixXd eye=MatrixXd::Identity(jTj.rows(), jTj.cols());
-//	MatrixXd left_part= (jTj + lambda*eye);
-//
-//	const double mult=1;
-//	MatrixXd right_part= mult*jac_trans*(  *(error_matrix->mtx));
-//
-//	VectorXd ans = left_part.colPivHouseholderQr().solve(right_part);
-//	//VectorXd ans = left_part.fullPivLu().solve(right_part);
-//	weights->mtx->topRows(ans.rows())=ans.head(ans.rows());
-//
-//	return weights;
-
 	MatrixXd left_part=(*jTj) + lambda*(MatrixXd::Identity(jTj->rows(), jTj->cols()));
 	VectorXd ans = left_part.colPivHouseholderQr().solve(*jT_by_err);
 	weights->mtx->topRows(ans.rows())=ans.head(ans.rows());
@@ -86,7 +68,6 @@ EigenBackend::~EigenBackend() {
 // Eigen matrix functions
 //
 EigenBackend::EigenMatrix::EigenMatrix(int rows, int columns) : Mtx(rows, columns){
-	//mtx=new MatrixXd(3, 3);
 	mtx=new MatrixXd(rows, columns);
 }
 

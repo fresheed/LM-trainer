@@ -12,8 +12,6 @@
 
 class FannTester {
 public:
-	//FannTester();
-	//~FannTester();
 	void testWithFannNet();
 private:
 	struct fann* getInitializedFannNet();

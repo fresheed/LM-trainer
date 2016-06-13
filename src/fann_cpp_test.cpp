@@ -9,7 +9,6 @@ using namespace std;
 
 
 int main(){
-	//main2();
 	FannTester fann_tester;
 	fann_tester.testWithFannNet();
 	return 0;
